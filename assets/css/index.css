@@ -1,0 +1,6 @@
+table td:last-child,
+table th:last-child,
+table td:nth-last-child(2),
+table th:nth-last-child(2) {
+    width: 5%;
+}
