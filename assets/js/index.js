@@ -1,5 +1,5 @@
-import createApi from './api.js';
+import Api from './api.js';
 
-const api = createApi();
+const api = new Api();
 
 console.log(await api.get('/index.php'));
