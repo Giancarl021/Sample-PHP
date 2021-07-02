@@ -1,6 +1,19 @@
-table td:last-child,
-table th:last-child,
+table {
+    table-layout: fixed;
+    white-space: nowrap;
+}
+
+table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 table td:nth-last-child(2),
 table th:nth-last-child(2) {
-    width: 5%;
+    width: 12%;
+}
+
+table td:last-child,
+table th:last-child {
+    width: 20%;
 }
