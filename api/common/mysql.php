@@ -1,5 +1,5 @@
 <?php
-
+// mysqli_report(MYSQLI_REPORT_ALL);
 class PreparedStatement
 {
     private $stmt, $result;
@@ -16,6 +16,10 @@ class PreparedStatement
         $this->connection = $connection;
 
         $this->stmt = mysqli_prepare($connection, $statement);
+
+        if (!$this->stmt) {
+            throw new Exception(mysqli_error($this->connection));
+        }
     }
 
     public function run($data = [])
@@ -60,7 +64,7 @@ class MySQL
     public function prepare($statement)
     {
         if (!$this->connection) throw new Exception("Invalid connection");
-        if (!$this->statement) throw new Exception("Invalid statement");
+        if (!$statement) throw new Exception("Invalid statement");
 
         return new PreparedStatement($this->connection, $statement);
     }
