@@ -14,7 +14,7 @@ try {
 }
 
 try {
-    $items = $mysql
+    $mysql
         ->prepare("INSERT INTO Product (name, description, price) VALUES (?, ?, ?)")
         ->run([
             $params["name"],
