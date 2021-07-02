@@ -1,6 +1,6 @@
-create table Product (
-    id serial primary key,
-    name varchar(30) not null,
-    description text not null,
-    price float(2) not null
+CREATE TABLE Product (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    description TEXT NOT NULL,
+    price FLOAT(2) NOT NULL
 );
