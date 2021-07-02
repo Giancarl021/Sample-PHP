@@ -2,7 +2,7 @@
 // mysqli_report(MYSQLI_REPORT_ALL);
 class PreparedStatement
 {
-    private $stmt, $result;
+    private $stmt;
     private const types = [
         "string" => "s",
         "integer" => "i",
@@ -26,6 +26,8 @@ class PreparedStatement
     {
         if (!$this->stmt) throw new Exception("Invalid statement");
 
+        $types = "";
+
         foreach ($data as $param) {
             $type = gettype($param);
 
@@ -35,17 +37,30 @@ class PreparedStatement
                 $param_type = self::types["default"];
             }
 
-            mysqli_stmt_bind_param($this->stmt, $param_type, $param);
+            $types .= $param_type;
+        }
+
+        $rows = [];
+
+        if (count($data) > 0) {
+            mysqli_stmt_bind_param($this->stmt, $types, ...$data);
         }
 
         mysqli_stmt_execute($this->stmt);
 
-        mysqli_stmt_bind_result($this->stmt, $this->result);
-        mysqli_stmt_fetch($this->stmt);
+        $result = mysqli_stmt_get_result($this->stmt);
+
+        if (gettype($result) === "boolean") {
+            return $result;
+        }
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $rows[] = $row;
+        }
 
         mysqli_stmt_close($this->stmt);
 
-        return $this->result;
+        return $rows;
     }
 }
 
@@ -67,5 +82,68 @@ class MySQL
         if (!$statement) throw new Exception("Invalid statement");
 
         return new PreparedStatement($this->connection, $statement);
+    }
+
+    public function query($query)
+    {
+        if (!$this->connection) throw new Exception("Invalid connection");
+        if (!$query) throw new Exception("Invalid query");
+
+        $result = mysqli_query($this->connection, $query);
+
+        if (!$result) {
+            throw new Exception(mysqli_error($this->connection));
+            return;
+        }
+
+        $rows = $this->assoc_types($result);
+
+        mysqli_free_result($result);
+
+        return $rows;
+    }
+
+    public function close()
+    {
+        mysqli_close($this->connection);
+    }
+
+    private function assoc_types($result)
+    {
+        $fields = mysqli_fetch_fields($result);
+        $data = [];
+        $types = [];
+        foreach ($fields as $field) {
+            switch ($field->type) {
+                case MYSQLI_TYPE_NULL:
+                    $types[$field->name] = 'null';
+                    break;
+                case MYSQLI_TYPE_BIT:
+                    $types[$field->name] = 'boolean';
+                    break;
+                case MYSQLI_TYPE_TINY:
+                case MYSQLI_TYPE_SHORT:
+                case MYSQLI_TYPE_LONG:
+                case MYSQLI_TYPE_INT24:
+                case MYSQLI_TYPE_LONGLONG:
+                    $types[$field->name] = 'int';
+                    break;
+                case MYSQLI_TYPE_FLOAT:
+                case MYSQLI_TYPE_DOUBLE:
+                    $types[$field->name] = 'float';
+                    break;
+                default:
+                    $types[$field->name] = 'string';
+                    break;
+            }
+        }
+        while ($row = mysqli_fetch_assoc($result)) array_push($data, $row);
+        for ($i = 0; $i < count($data); $i++) {
+            foreach ($types as $name => $type) {
+                settype($data[$i][$name], $type);
+            }
+        }
+
+        return $data;
     }
 }
