@@ -13,10 +13,26 @@ export default class Api {
     }
 
     async #request(uri, options = {}) {
-        return await (await fetch(this.#endpoint + uri, options)).json();
+        const response = await fetch(this.#endpoint + uri, options);
+
+        let json;
+        try {
+            json = await response.json();
+        } catch (err) {
+            return null;
+        }
+
+        return json;
     }
 
     async get(uri) {
         return await this.#request(uri);
+    }
+
+    async post(uri, data) {
+        return await this.#request(uri, {
+            method: 'POST',
+            body: new URLSearchParams(data)
+        });
     }
 }

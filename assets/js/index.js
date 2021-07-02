@@ -9,6 +9,8 @@ await render();
 async function render() {
     const items = await api.get('/list.php');
 
+    if (!items || !items.length) return;
+
     let html = '';
 
     const formatter = new Intl.NumberFormat('pt-BR');
@@ -39,7 +41,7 @@ async function remove(element) {
         .querySelector('td:first-child')
         .innerText;
 
-    console.log(id);
+    await api.post('/delete.php', { id });
 
     render();
 }
