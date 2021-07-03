@@ -1,7 +1,10 @@
-export default async function (api, tbody) {
+export default async function render(api, tbody) {
     const items = await api.get('/list.php');
 
-    if (!items || !items.length) return;
+    if (!items || !items.length) {
+        tbody.innerHTML = '';
+        return;
+    }
 
     let html = '';
 
@@ -22,25 +25,25 @@ export default async function (api, tbody) {
 
     tbody.innerHTML = html;
 
-    [ ...document.querySelectorAll('.remove') ]
+    [...document.querySelectorAll('.remove')]
         .forEach(b => b.onclick = () => remove(b));
-    
-    [ ...document.querySelectorAll('.edit') ]
+
+    [...document.querySelectorAll('.edit')]
         .forEach(b => b.onclick = () => edit(b));
-}
 
-async function remove(element) {
-    const id = element
-        .parentElement
-        .parentElement
-        .querySelector('td:first-child')
-        .innerText;
+    async function remove(element) {
+        const id = element
+            .parentElement
+            .parentElement
+            .querySelector('td:first-child')
+            .innerText;
 
-    await api.post('/delete.php', { id });
+        await api.post('/delete.php', { id });
 
-    render();
-}
+        await render(api, tbody);
+    }
 
-async function edit(element) {
+    async function edit(element) {
 
+    }
 }
