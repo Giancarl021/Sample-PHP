@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,9 +11,10 @@
     <link rel="stylesheet" href="assets/css/common.css">
     <link rel="stylesheet" href="assets/css/index.css">
     <!-- JS -->
-    <script type="module" src="assets/js/index.js"></script>
+    <script type="module" defer src="assets/js/index.js"></script>
     <title>Sample PHP</title>
 </head>
+
 <body>
     <section class="section">
         <h1 class="title">Produtos</h1>
@@ -26,12 +28,29 @@
                     <th>Nome</th>
                     <th>Descrição</th>
                     <th>Preço</th>
-                    <th colspan="2"><button class="button is-link is-fullwidth">Adicionar</button></th>
+                    <th colspan="2"><button class="button is-link is-fullwidth add">Adicionar</button></th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
     </section>
+    <div class="modal">
+        <div class="modal-background close-modal"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Adicionar</p>
+            <button class="delete close-modal" aria-label="Fechar"></button>
+          </header>
+          <section class="modal-card-body">
+            <!-- Content ... -->
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-success">Adicionar</button>
+            <button class="button is-danger close-modal">Cancelar</button>
+          </footer>
+        </div>
+      </div>
 </body>
+
 </html>

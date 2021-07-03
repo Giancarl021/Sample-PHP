@@ -1,47 +1,15 @@
 import Api from './common/api.js';
+import render from './common/render.js';
+import { startModal, closeModal } from './common/modal.js';
 
 const api = new Api();
 
 const tbody = document.querySelector('tbody');
+const addButton = document.querySelector('.add');
 
-await render();
+addButton.onclick = () => startModal(api);
 
-async function render() {
-    const items = await api.get('/list.php');
+[ ...document.querySelectorAll('.close-modal') ]
+    .forEach(b => b.onclick = () => closeModal());
 
-    if (!items || !items.length) return;
-
-    let html = '';
-
-    const formatter = new Intl.NumberFormat('pt-BR');
-
-    for (const item of items) {
-        html += `
-        <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.description}</td>
-            <td>R$${formatter.format(item.price)}</td>
-            <td><button class="button is-warning is-fullwidth edit">Editar</button></td>
-            <td><button class="button is-danger is-fullwidth remove">Excluir</button></td>
-        </tr>
-    `;
-    }
-
-    tbody.innerHTML = html;
-
-    [ ...document.querySelectorAll('.remove') ]
-        .forEach(b => b.onclick = () => remove(b));
-}
-
-async function remove(element) {
-    const id = element
-        .parentElement
-        .parentElement
-        .querySelector('td:first-child')
-        .innerText;
-
-    await api.post('/delete.php', { id });
-
-    render();
-}
+await render(api, tbody);
