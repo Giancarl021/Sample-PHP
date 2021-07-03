@@ -27,8 +27,6 @@ try {
     die;
 }
 
-$response
-    ->status(200)
-    ->send();
+$response->send();
 
 $mysql->close();
