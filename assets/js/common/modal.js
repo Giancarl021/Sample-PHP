@@ -1,4 +1,4 @@
-export function startModal(api, data = null) {
+export function openModal(api, data = null) {
     const modal = document.querySelector('.modal');
 
     modal.classList.add('is-active');

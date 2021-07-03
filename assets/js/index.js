@@ -1,13 +1,13 @@
 import Api from './common/api.js';
 import render from './common/render.js';
-import { startModal, closeModal } from './common/modal.js';
+import { openModal, closeModal } from './common/modal.js';
 
 const api = new Api();
 
 const tbody = document.querySelector('tbody');
 const addButton = document.querySelector('.add');
 
-addButton.onclick = () => startModal(api);
+addButton.onclick = () => openModal(api);
 
 [ ...document.querySelectorAll('.close-modal') ]
     .forEach(b => b.onclick = () => closeModal());
