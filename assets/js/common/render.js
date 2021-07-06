@@ -1,3 +1,5 @@
+import { openModal } from './modal.js';
+
 export default async function render(api, tbody) {
     const items = await api.get('/list.php');
 
@@ -44,6 +46,19 @@ export default async function render(api, tbody) {
     }
 
     async function edit(element) {
+        const row = element.parentElement.parentElement;
 
+        const [id, name, description, priceString] = [...row.querySelectorAll('td')].map(e => e.innerText);
+
+        const price = priceString.replace(/\D/g, '');
+
+        const data = {
+            id,
+            name,
+            description,
+            price
+        };
+
+        openModal(api, render.bind(null, api, tbody), data);
     }
 }

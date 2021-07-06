@@ -7,7 +7,7 @@ const api = new Api();
 const tbody = document.querySelector('tbody');
 const addButton = document.querySelector('.add');
 
-addButton.onclick = () => openModal(api);
+addButton.onclick = () => openModal(api, render.bind(null, api, tbody));
 
 [ ...document.querySelectorAll('.close-modal') ]
     .forEach(b => b.onclick = () => closeModal());
