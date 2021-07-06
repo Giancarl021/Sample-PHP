@@ -1,15 +1,19 @@
 export function openModal(api, render, data = null) {
     const modal = document.querySelector('.modal');
+    const submitButton = modal.querySelector('.modal-submit');
 
     modal.classList.add('is-active');
 
     if (data) {
         modal.querySelector('.modal-input-id').style.display = 'block';
         fill(data);
-        modal.querySelector('.modal-submit').onclick = () => edit(api, render);
+        submitButton.onclick = () => edit(api, render);
+        submitButton.innerText = 'Editar';
     } else {
         modal.querySelector('.modal-input-id').style.display = 'none';
-        modal.querySelector('.modal-submit').onclick = () => add(api, render);
+        empty();
+        submitButton.onclick = () => add(api, render);
+        submitButton.innerText = 'Adicionar';
     }
 }
 
@@ -34,16 +38,22 @@ async function edit(api, render) {
 }
 
 function fill(data) {
+    const inputs = getInputs();
 
+    for (const key in data) {
+        inputs[key].value = data[key];
+    }
+}
+
+function empty() {
+    const inputs = getInputs();
+    for (const key in inputs) {
+        inputs[key].value = '';
+    }
 }
 
 function serialize() {
-    const inputs = {
-        id: document.querySelector('.modal-input-id input'),
-        name: document.querySelector('.modal-input-name input'),
-        description: document.querySelector('.modal-input-description textarea'),
-        price: document.querySelector('.modal-input-price input')
-    };
+    const inputs = getInputs();
 
     const data = {};
     let isValid = true;
@@ -75,4 +85,13 @@ function serialize() {
     }
 
     return data;
+}
+
+function getInputs() {
+    return {
+        id: document.querySelector('.modal-input-id input'),
+        name: document.querySelector('.modal-input-name input'),
+        description: document.querySelector('.modal-input-description textarea'),
+        price: document.querySelector('.modal-input-price input')
+    };
 }
